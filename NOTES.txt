@@ -1,0 +1,27 @@
+
+npm i --save express@5.0.0-alpha.7 @types/express cors @types/cors compression @types/compression @types/node @types/pg class-validator pg redis typeorm swagger-ui-express @types/swagger-ui-express jsonwebtoken @types/jsonwebtoken bcryptjs @types/bcryptjs
+
+npm i --save-dev reflect-metadata typescript tslint tsc-watch
+
+./node_modules/.bin/typeorm migration:generate -n Index
+
+
+
+seed user:
+import { MigrationInterface, QueryRunner, getRepository } from 'typeorm';
+import { User } from '../entity/User';
+
+export class SeedUser1574188307405 implements MigrationInterface {
+  public async up(queryRunner: QueryRunner): Promise<any> {
+    let user = new User();
+    user.email = 'admin@gmail.com';
+    user.displayName = 'Heri Susanto';
+    user.password = 'admin';
+    user.hashPassword();
+    user.role = 'ADMIN';
+    const userRepository = getRepository(User);
+    await userRepository.save(user);
+  }
+
+  public async down(queryRunner: QueryRunner): Promise<any> {}
+}
