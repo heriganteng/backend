@@ -1,10 +1,10 @@
 import { Request, Response } from 'express';
 import UserController from './UserController';
-// import {
-//   checkSearchParams,
-//   checkJwt,
-//   checkRole
-// } from '../../middleware/checks';
+import {
+  checkSearchParams,
+  checkJwt,
+  checkRole
+} from '../../middleware/checks';
 
 export default [
   {
