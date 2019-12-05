@@ -30,5 +30,14 @@ export default [
         await AuthController.loginWithToken(req, res);
       }
     ]
+  },
+  {
+    path: '/api/v1/auth/register',
+    method: 'post',
+    handler: [
+      async (req: Request, res: Response) => {
+        await AuthController.register(req, res);
+      }
+    ]
   }
 ];
