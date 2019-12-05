@@ -1,3 +1,4 @@
 export default {
-  jwtSecret: '@QEGTUI'
+  jwtSecret: '@QEGTUI',
+  expiresIn: '24h'
 };

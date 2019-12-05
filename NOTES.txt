@@ -5,23 +5,17 @@ npm i --save-dev reflect-metadata typescript tslint tsc-watch
 
 ./node_modules/.bin/typeorm migration:generate -n Index
 
+docker run --name some-redis -p 6379:6379 -d redis  
+
+ENDPOINTS:
+
+USER:
 
 
-seed user:
-import { MigrationInterface, QueryRunner, getRepository } from 'typeorm';
-import { User } from '../entity/User';
 
-export class SeedUser1574188307405 implements MigrationInterface {
-  public async up(queryRunner: QueryRunner): Promise<any> {
-    let user = new User();
-    user.email = 'admin@gmail.com';
-    user.displayName = 'Heri Susanto';
-    user.password = 'admin';
-    user.hashPassword();
-    user.role = 'ADMIN';
-    const userRepository = getRepository(User);
-    await userRepository.save(user);
-  }
+JOB:
 
-  public async down(queryRunner: QueryRunner): Promise<any> {}
-}
+REGISTER:
+
+USERJOB:
+

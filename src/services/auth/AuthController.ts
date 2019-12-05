@@ -10,9 +10,7 @@ import config from '../../config/config';
 
 class AuthController {
   static login = async (req: Request, res: Response) => {
-    //Check if email and password are set
-    console.log(req.body);
-    let { email, password } = req.body;
+    let { email, password } = req.body.data;
 
     if (!(email && password)) {
       res.status(400).send();
@@ -27,21 +25,41 @@ class AuthController {
       res.status(401).send();
     }
 
-    //Check if encrypted password match
+    // //Check if encrypted password match
+    console.log(user);
     if (!user.checkIfUnencryptedPasswordIsValid(password)) {
       res.status(401).send();
       return;
     }
 
-    //Sing JWT, valid for 1 hour
-    const token = jwt.sign(
+    const user_data = {
+      uuid: user.id,
+      from: 'express-postgres-db',
+      role: user.role,
+      data: {
+        displayName: user.displayName,
+        photoURL: user.photoURL,
+        email: user.email,
+        about: user.about,
+        address: user.address,
+        isVerified: user.isVerified,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt
+      }
+    };
+
+    const access_token = jwt.sign(
       { userId: user.id, email: user.email },
       config.jwtSecret,
-      { expiresIn: '1h' }
+      { expiresIn: config.expiresIn }
     );
+    const response = {
+      user: user_data,
+      access_token: access_token
+    };
+    console.log(response);
 
-    //Send the jwt in the response
-    res.send(token);
+    res.send(response);
   };
 
   static changePassword = async (req: Request, res: Response) => {

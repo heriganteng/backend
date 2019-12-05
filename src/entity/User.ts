@@ -39,6 +39,9 @@ export class User {
   @Column({ nullable: true })
   address!: string;
 
+  @Column({ nullable: true })
+  photoURL!: string;
+
   @Column()
   isVerified: boolean = false;
 
