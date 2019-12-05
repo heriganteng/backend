@@ -21,5 +21,14 @@ export default [
         await AuthController.changePassword(req, res);
       }
     ]
+  },
+  {
+    path: '/api/v1/auth/access-token',
+    method: 'post',
+    handler: [
+      async (req: Request, res: Response) => {
+        await AuthController.loginWithToken(req, res);
+      }
+    ]
   }
 ];

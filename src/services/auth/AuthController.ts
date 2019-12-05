@@ -62,6 +62,59 @@ class AuthController {
     res.send(response);
   };
 
+  static loginWithToken = async (req: Request, res: Response) => {
+    let { access_token } = req.body.data;
+    if (access_token.startsWith('Bearer ')) {
+      // Remove Bearer from string
+      access_token = access_token.slice(7, access_token.length);
+    }
+
+    try {
+      const { email }: any = jwt.verify(access_token, config.jwtSecret);
+      const userRepository = getRepository(User);
+      let user!: User;
+      try {
+        user = await userRepository.findOneOrFail({ where: { email } });
+      } catch (error) {
+        res.status(401).send();
+      }
+      // const user = _.cloneDeep(authDB.users.find(_user => _user.uuid === id));
+      delete user['password'];
+
+      const new_access_token = jwt.sign(
+        { userId: user.id, email: user.email },
+        config.jwtSecret,
+        { expiresIn: config.expiresIn }
+      );
+      const user_data = {
+        uuid: user.id,
+        from: 'express-postgres-db',
+        role: user.role,
+        data: {
+          displayName: user.displayName,
+          photoURL: user.photoURL,
+          email: user.email,
+          about: user.about,
+          address: user.address,
+          isVerified: user.isVerified,
+          createdAt: user.createdAt,
+          updatedAt: user.updatedAt
+        }
+      };
+
+      const response = {
+        user: user_data,
+        access_token: new_access_token
+      };
+      res.send(response);
+      // return [200, response];
+    } catch (e) {
+      const error = 'Invalid access token detected';
+      // return [401, { error }];
+      res.status(401).send();
+    }
+  };
+
   static changePassword = async (req: Request, res: Response) => {
     //Get ID from JWT
     const id = res.locals.jwtPayload.userId;
